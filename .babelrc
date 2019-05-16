@@ -1,0 +1,16 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env"
+    ]
+  ], 
+  "plugins": [
+    ["transform-es2015-modules-commonjs", {
+      "allowTopLevelThis": true
+    }], 
+    "@babel/plugin-syntax-object-rest-spread",
+    ["@babel/plugin-transform-modules-commonjs", {
+      "strictMode": false
+    }]
+  ]
+}

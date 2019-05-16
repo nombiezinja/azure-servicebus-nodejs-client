@@ -1,0 +1,33 @@
+{
+  "name": "service-bus-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "babel -w src/ -d dest/",
+    "build": "babel src/ -d dest/",
+    "serve": "babel -w src/ -d dest/ | nodemon dest/index.js",
+    "start": "node dest/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/service-bus": "^1.0.0-preview.3",
+    "@babel/polyfill": "^7.4.3",
+    "azure-sb": "^0.11.0",
+    "body-parser": "^1.19.0",
+    "dotenv": "^7.0.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-transform-async-to-generator": "^7.4.0",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/register": "^7.4.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2"
+  }
+}
