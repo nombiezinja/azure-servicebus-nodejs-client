@@ -24,6 +24,44 @@ app.set('views', path.join(__dirname, '../static'));
 const connectionString = process.env.CONNECTION_STRING;
 const queueName = process.env.QUEUE_NAME;
 
+const deadLetterQueueName = QueueClient.getDeadLetterQueuePath(queueName);
+const ns = ServiceBusClient.createFromConnectionString(connectionString);
+
+const processDLQ = async () => {
+  try {
+    await processDeadletterMessageQueue();
+  } finally {
+    await ns.close();
+  }
+}
+
+const processDeadletterMessageQueue = async () => {
+  const client = ns.createQueueClient(deadLetterQueueName);
+  const receiver = client.createReceiver(ReceiveMode.peekLock);
+
+  const messages = await receiver.receiveMessages(1);
+
+  console.log("messages", messages)
+  if (messages.length > 0) {
+    messages.forEach((m) => {
+      console.log("Received the message from DLQ - ", m.body);
+      console.log("Could not be delivered because:", m.userProperties.DeadLetterReason, m.userProperties.DeadLetterErrorDescription);
+    })
+
+    // Do something with the message retrieved from DLQ
+
+    // Mark message as complete/processed.
+  } else {
+    console.log("Error: No messages were received from the DLQ.");
+  }
+
+  await client.close();
+}
+// processDeadletterMessageQueue()
+
+processDLQ();
+
+
 // function checkForMessages(sbService, queueName, callback) {
 //   sbService.receiveQueueMessage(queueName, { isPeekLock: true }, function (err, lockedMessage) {
 //     if (err) {

@@ -11,6 +11,11 @@
     "@babel/plugin-syntax-object-rest-spread",
     ["@babel/plugin-transform-modules-commonjs", {
       "strictMode": false
-    }]
+    }], 
+    ["@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ]
   ]
 }
