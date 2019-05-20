@@ -128,38 +128,143 @@ function () {
 var sbService = azure.createServiceBusService(connectionString);
 var emptyReturn = 0;
 
-var checkForMsgs = function checkForMsgs() {
-  sbService.receiveQueueMessage(deadLetterQueueName, {
+function checkForMsgs(queue, exitIfEmpty) {
+  sbService.receiveQueueMessage(queue, {
     isPeekLock: true
   }, function (err, lockedMessage) {
     if (err) {
       if (err == 'No messages to receive') {
-        console.log('No messages');
-        emptyReturn += 1;
-        console.log("empty return", emptyReturn);
+        console.log(new Date(Date.now()) + ' No messages');
 
-        if (emptyReturn > 5) {
-          process.exit(0);
+        if (exitIfEmpty) {
+          emptyReturn += 1;
+
+          if (emptyReturn > 5) {
+            process.exit(0);
+          }
         }
 
         return;
       } else {
-        console.log("error received", err);
+        console.log(new Date(Date.now()) + " error received", err);
       }
     } else {
-      console.log("lockedMessage", lockedMessage);
+      console.log(new Date(Date.now()) + " lockedMessage", lockedMessage);
     }
   });
-};
+}
 
-setInterval(checkForMsgs, 1000);
-sbService.getQueue(queueName, function (err, data) {
-  if (err) {
-    console.log("error received", error);
-  } else {
-    console.log("data returned", data);
-  }
-});
+var checkChronically = function checkChronically(queueName, period, exitIfEmpty) {
+  setInterval(checkForMsgs.bind(null, queueName, exitIfEmpty), period);
+}; // checkChronically(deadLetterQueueName, 1000)
+// checkChronically(process.env.QUEUE_NAME, 5000, false)
+// Get queue info
+// sbService.getQueue(queueName, function(err, data){
+//   if (err) {
+//     console.log("error received", error)
+//   } else {
+//     console.log("data returned", data)
+//   }
+// })
+
+
+var peekIncomingMsg =
+/*#__PURE__*/
+function () {
+  var _ref3 = (0, _asyncToGenerator3["default"])(
+  /*#__PURE__*/
+  _regenerator2["default"].mark(function _callee4(queueName) {
+    var client, receiver, onMessageHandler, onErrorHandler;
+    return _regenerator2["default"].wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            client = ns.createQueueClient(queueName);
+            receiver = client.createReceiver(_serviceBus.ReceiveMode.peekLock); // const messages = await receiver.receiveMessages(10);
+            // console.log("messages", messages)
+            // if (messages.length > 0) {
+            //   messages.forEach((m) => {
+            //     console.log(new Date(Date.now()) + ` Received message from ${queueName}`, m.body);
+            //   })
+            // } else {
+            //   console.log(new Date(Date.now()) + ` No message recieved ${queueName}`);
+            // }
+
+            onMessageHandler =
+            /*#__PURE__*/
+            function () {
+              var _ref4 = (0, _asyncToGenerator3["default"])(
+              /*#__PURE__*/
+              _regenerator2["default"].mark(function _callee3(brokeredMessage) {
+                return _regenerator2["default"].wrap(function _callee3$(_context3) {
+                  while (1) {
+                    switch (_context3.prev = _context3.next) {
+                      case 0:
+                        console.log("Received message: ".concat(brokeredMessage.body));
+                        _context3.next = 3;
+                        return brokeredMessage.complete();
+
+                      case 3:
+                      case "end":
+                        return _context3.stop();
+                    }
+                  }
+                }, _callee3);
+              }));
+
+              return function onMessageHandler(_x2) {
+                return _ref4.apply(this, arguments);
+              };
+            }();
+
+            onErrorHandler = function onErrorHandler(err) {
+              console.log("Error occurred: ", err);
+            };
+
+            _context4.prev = 4;
+            receiver.registerMessageHandler(onMessageHandler, onErrorHandler, {
+              autoComplete: false
+            }); // Waiting long enough before closing the receiver to receive messages
+
+            _context4.next = 8;
+            return (0, _serviceBus.delay)(5000);
+
+          case 8:
+            _context4.next = 10;
+            return receiver.close();
+
+          case 10:
+            _context4.next = 12;
+            return client.close();
+
+          case 12:
+            _context4.prev = 12;
+            _context4.next = 15;
+            return ns.close();
+
+          case 15:
+            return _context4.finish(12);
+
+          case 16:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, null, [[4,, 12, 16]]);
+  }));
+
+  return function peekIncomingMsg(_x) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+peekIncomingMsg(process.env.QUEUE_NAME)["catch"](function (err) {
+  console.log(new Date(Date.now()) + " error:", err);
+}); // const listen = async () => {
+//     await peekIncomingMsg(process.env.QUEUE_NAME); 
+// }
+// listen()
+
 server.listen(port, function listening() {
   console.log("Server listening on ".concat(server.address().port));
 });
