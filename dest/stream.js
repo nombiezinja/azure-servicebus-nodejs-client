@@ -37,6 +37,7 @@ function _main() {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
+            console.log("Main running");
             ns = ServiceBusClient.createFromConnectionString(connectionString); // If receiving from a Subscription, use `createSubscriptionClient` instead of `createQueueClient`
 
             client = ns.createQueueClient(queueName); // To receive messages from sessions, use getSessionReceiver instead of getReceiver or look at
@@ -83,7 +84,7 @@ function _main() {
             } finally {// await ns.close();
             }
 
-          case 6:
+          case 7:
           case "end":
             return _context2.stop();
         }

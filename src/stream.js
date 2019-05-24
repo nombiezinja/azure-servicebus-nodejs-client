@@ -13,6 +13,7 @@ const connectionString = process.env.CONNECTION_STRING;
 const queueName = process.env.QUEUE_NAME;
 
 async function main() {
+  console.log("Main running")
   const ns = ServiceBusClient.createFromConnectionString(connectionString);
 
   // If receiving from a Subscription, use `createSubscriptionClient` instead of `createQueueClient`
