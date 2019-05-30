@@ -6,9 +6,7 @@ const {
   delay
 } = require("@azure/service-bus");
 
-// non destructive look at message 
 
-// Define connection string and related Service Bus entity names here
 const connectionString = process.env.CONNECTION_STRING;
 const queueName = process.env.QUEUE_NAME;
 
@@ -18,11 +16,11 @@ async function main() {
 
   const client = ns.createQueueClient(queueName);
 
-  const receiver = client.createReceiver(ReceiveMode.peekLock);
+  const receiver = client.createReceiver(ReceiveMode.receiveAndDelete);
 
   const onMessageHandler = async (brokeredMessage) => {
     console.log(new Date(Date.now()) + ` Received message: ${JSON.stringify(brokeredMessage.body)}`);
-    // await brokeredMessage.complete();
+    await brokeredMessage.complete();
   };
   const onErrorHandler = (err) => {
     console.log("Error occurred: ", err);

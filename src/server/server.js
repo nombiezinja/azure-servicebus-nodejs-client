@@ -12,13 +12,7 @@ const server = http.createServer(app);
 const path = require('path');
 const azure = require('azure-sb');
 
-import {
-  ServiceBusMessage,
-  ServiceBusClient,
-  ReceiveMode,
-  QueueClient, 
-  delay
-} from "@azure/service-bus";
+import {ServiceBusMessage,ServiceBusClient,ReceiveMode,QueueClient, delay} from "@azure/service-bus";
 
 app.set('view engine', 'ejs');
 
@@ -26,9 +20,15 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, '../static')));
 app.set('views', path.join(__dirname, '../static'));
 
-
 const connectionString = process.env.CONNECTION_STRING;
 const queueName = process.env.QUEUE_NAME;
+
+// Expose APIs for 
+// non-destructive stream
+// destructive stream 
+// peek dead letter queue 
+
+
 
 server.listen(port, function listening() {
   console.log(`Server listening on ${server.address().port}`);

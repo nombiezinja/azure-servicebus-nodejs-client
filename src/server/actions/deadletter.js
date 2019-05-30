@@ -2,14 +2,6 @@ require('dotenv').config({
   silent: true
 });
 
-const ENV = process.env.NODE_ENV;
-const port = process.env.PORT || 8080;
-
-const express = require('express');
-const http = require('http');
-const app = express();
-const server = http.createServer(app);
-const path = require('path');
 const azure = require('azure-sb');
 
 import {
@@ -19,12 +11,6 @@ import {
   QueueClient, 
   delay
 } from "@azure/service-bus";
-
-app.set('view engine', 'ejs');
-
-app.use(express.json())
-app.use(express.static(path.join(__dirname, '../static')));
-app.set('views', path.join(__dirname, '../static'));
 
 
 const connectionString = process.env.CONNECTION_STRING;
@@ -43,16 +29,16 @@ const processDLQ = async () => {
   }
 }
 
+// use this one
 const processDeadletterMessageQueue = async () => {
   const client = ns.createQueueClient(deadLetterQueueName);
   const receiver = client.createReceiver(ReceiveMode.peekLock);
 
-  const messages = await receiver.receiveMessages(1);
+  const messages = await receiver.receiveMessages(10);
 
-  console.log("messages", messages)
   if (messages.length > 0) {
     messages.forEach((m) => {
-      console.log("Received the message from DLQ - ", m.body);
+      console.log("Received the message from DLQ - ", m.body.toString());
       console.log("Could not be delivered because:", m.userProperties.DeadLetterReason, m.userProperties.DeadLetterErrorDescription);
     })
   } else {
@@ -152,7 +138,3 @@ peekIncomingMsg(process.env.QUEUE_NAME).catch((err) => {
 // }
 
 // listen()
-
-server.listen(port, function listening() {
-  console.log(`Server listening on ${server.address().port}`);
-});
