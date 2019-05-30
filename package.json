@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "babel -w src/ -d dest/",
     "build": "babel src/ -d dest/",
-    "serve": "babel -w src/ -d dest/ | nodemon dest/index.js",
+    "serve": "babel -w src/ -d dest/ | nodemon dest/server/server.js",
     "start": "node dest/index.js"
   },
   "author": "",

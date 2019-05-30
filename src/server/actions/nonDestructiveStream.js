@@ -42,4 +42,4 @@ async function main() {
   }
 }
 
-export default peek();
+export default main();

@@ -4,6 +4,10 @@ var _interopRequireDefault3 = require("@babel/runtime/helpers/interopRequireDefa
 
 var _interopRequireDefault2 = _interopRequireDefault3(require("@babel/runtime/helpers/interopRequireDefault"));
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _regenerator = require("@babel/runtime/regenerator");
 
 var _regenerator2 = (0, _interopRequireDefault2["default"])(_regenerator);
@@ -93,6 +97,4 @@ function _main() {
   return _main.apply(this, arguments);
 }
 
-main()["catch"](function (err) {
-  console.log("Error occurred: ", err);
-});
+exports["default"] = main;
