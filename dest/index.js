@@ -122,9 +122,9 @@ function () {
   return function processDeadletterMessageQueue() {
     return _ref2.apply(this, arguments);
   };
-}(); // processDLQ();
+}();
 
-
+processDLQ();
 var sbService = azure.createServiceBusService(connectionString);
 var emptyReturn = 0;
 

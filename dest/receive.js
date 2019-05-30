@@ -40,7 +40,7 @@ function _main() {
             console.log("Main running");
             ns = ServiceBusClient.createFromConnectionString(connectionString);
             client = ns.createQueueClient(queueName);
-            receiver = client.createReceiver(ReceiveMode.peekLock);
+            receiver = client.createReceiver(ReceiveMode.receiveAndDelete);
 
             onMessageHandler =
             /*#__PURE__*/

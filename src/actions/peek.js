@@ -61,7 +61,7 @@ const processDeadletterMessageQueue = async () => {
 
   await client.close();
 }
-// processDLQ();
+processDLQ();
 
 const sbService = azure.createServiceBusService(connectionString);
 

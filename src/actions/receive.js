@@ -16,16 +16,13 @@ async function main() {
   console.log("Main running")
   const ns = ServiceBusClient.createFromConnectionString(connectionString);
 
-  // If receiving from a Subscription, use `createSubscriptionClient` instead of `createQueueClient`
   const client = ns.createQueueClient(queueName);
 
-  // To receive messages from sessions, use getSessionReceiver instead of getReceiver or look at
-  // the sample in sessions.js file
-  const receiver = client.createReceiver(ReceiveMode.peekLock);
+  const receiver = client.createReceiver(ReceiveMode.receiveAndDelete);
 
   const onMessageHandler = async (brokeredMessage) => {
     console.log(new Date(Date.now()) + ` Received message: ${JSON.stringify(brokeredMessage.body)}`);
-    // await brokeredMessage.complete();
+    await brokeredMessage.complete();
   };
   const onErrorHandler = (err) => {
     console.log("Error occurred: ", err);
