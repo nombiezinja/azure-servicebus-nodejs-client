@@ -49,6 +49,4 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.log("Error occurred: ", err);
-});
+export default main; 

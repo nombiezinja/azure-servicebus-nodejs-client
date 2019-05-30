@@ -19,10 +19,14 @@ const ns = ServiceBusClient.createFromConnectionString(connectionString);
 const sbService = azure.createServiceBusService(connectionString);
 
 // Get queue info
-sbService.getQueue(queueName, function(err, data){
-  if (err) {
-    console.log("error received", error)
-  } else {
-    console.log("data returned", data)
-  }
-})
+const main = () => {
+  sbService.getQueue(queueName, function(err, data){
+    if (err) {
+      console.log("error received", error)
+    } else {
+      console.log("data returned", data)
+    }
+  })
+}
+
+export default main;

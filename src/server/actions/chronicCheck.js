@@ -42,6 +42,6 @@ const checkChronically = (queueName, period, exitIfEmpty) => {
   setInterval(checkForMsgs.bind(null, queueName, exitIfEmpty), period);
 }
 
-checkChronically(deadLetterQueueName, 1000)
+// checkChronically(deadLetterQueueName, 1000)
 // checkChronically(process.env.QUEUE_NAME, 5000, false)
-
+export default checkChronically; 

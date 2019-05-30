@@ -1,7 +1,5 @@
 "use strict";
 
-var _serviceBus = require("@azure/service-bus");
-
 require('dotenv').config({
   silent: true
 });
@@ -12,10 +10,7 @@ var connectionString = process.env.CONNECTION_STRING;
 var queueName = process.env.QUEUE_NAME; // can prob replace with `${queueName}/$DeadLetterQueue`;
 // and get rid of @azure/service-bus
 
-var deadLetterQueueName = _serviceBus.QueueClient.getDeadLetterQueuePath(queueName);
-
-var ns = _serviceBus.ServiceBusClient.createFromConnectionString(connectionString);
-
+var deadLetterQueueName = "".concat(queueName, "/$DeadLetterQueue");
 var sbService = azure.createServiceBusService(connectionString);
 var emptyReturn = 0;
 

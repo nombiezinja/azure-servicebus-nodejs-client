@@ -23,12 +23,31 @@ app.set('views', path.join(__dirname, '../static'));
 const connectionString = process.env.CONNECTION_STRING;
 const queueName = process.env.QUEUE_NAME;
 
-// Expose APIs for 
+// TODO Initiate azure sb client here and pass to middleware
+
+app.get('/', (req,res) => {
+  res.status(200).send("hello am sb explorer");
+})
+
 // non-destructive stream
+app.get('/non-destructive-stream', (req,res) => {
+  res.status(200).send("hello am non destructive stream");
+})
+
 // destructive stream 
+app.get('/destructive-stream', (req,res) => {
+  res.status(200).send("hello am destructive stream");
+})
+
 // peek dead letter queue 
+app.get('/dead-letter-queue', (req,res) => {
+  res.status(200).send("hello am dead letter queue");
+})
 
-
+// send msg
+app.get('/send-msg', (req,res) => {
+  res.status(200).send("hello am send msg");
+})
 
 server.listen(port, function listening() {
   console.log(`Server listening on ${server.address().port}`);

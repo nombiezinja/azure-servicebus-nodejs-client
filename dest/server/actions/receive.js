@@ -71,22 +71,36 @@ function _main() {
               console.log("Error occurred: ", err);
             };
 
-            try {
-              receiver.registerMessageHandler(onMessageHandler, onErrorHandler, {
-                autoComplete: false
-              }); // Waiting long enough before closing the receiver to receive messages
-              // await delay(5000);
-              // await receiver.close();
-              // await client.close();
-            } finally {// await ns.close();
-            }
+            _context2.prev = 6;
+            receiver.registerMessageHandler(onMessageHandler, onErrorHandler, {
+              autoComplete: false
+            }); // Waiting long enough before closing the receiver to receive messages
 
-          case 7:
+            _context2.next = 10;
+            return delay(5000);
+
+          case 10:
+            _context2.next = 12;
+            return receiver.close();
+
+          case 12:
+            _context2.next = 14;
+            return client.close();
+
+          case 14:
+            _context2.prev = 14;
+            _context2.next = 17;
+            return ns.close();
+
+          case 17:
+            return _context2.finish(14);
+
+          case 18:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2);
+    }, _callee2, null, [[6,, 14, 18]]);
   }));
   return _main.apply(this, arguments);
 }
