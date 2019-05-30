@@ -48,38 +48,46 @@ var http = require('http');
 var app = express();
 var server = http.createServer(app);
 
+var io = require('socket.io')(server);
+
 var path = require('path');
 
 var azure = require('azure-sb');
 
 app.set('view engine', 'ejs');
 app.use(express.json());
-app.use(express["static"](path.join(__dirname, '../static')));
-app.set('views', path.join(__dirname, '../static'));
+app.use(express["static"](path.join(__dirname, '../../static')));
+app.set('views', path.join(__dirname, '../../static'));
 var connectionString = process.env.CONNECTION_STRING;
 var queueName = process.env.QUEUE_NAME;
-var sbService = azure.createServiceBusService(connectionString); // TODO Initiate azure sb client here and pass to middleware
-
+var sbService = azure.createServiceBusService(connectionString);
+io.on('connection', function (socket) {
+  console.log('a user connected');
+});
 app.get('/', function (req, res) {
-  res.status(200).send("hello am sb explorer");
+  res.render('index');
 }); // non-destructive stream
 
 app.get('/non-destructive-stream', function (req, res) {
+  (0, _nonDestructiveStream2["default"])();
   res.status(200).send("hello am non destructive stream");
 }); // destructive stream 
 
 app.get('/destructive-stream', function (req, res) {
+  (0, _destructiveStream2["default"])();
   res.status(200).send("hello am destructive stream");
 }); // peek dead letter queue 
 
 app.get('/dead-letter-queue', function (req, res) {
+  (0, _deadletter2["default"])();
   res.status(200).send("hello am dead letter queue");
 }); // send msg
 
 app.get('/send-msg', function (req, res) {
   (0, _send2["default"])();
   res.status(200).send("hello am send msg");
-});
+}); // get queue info
+
 app.get('/queue-info',
 /*#__PURE__*/
 function () {

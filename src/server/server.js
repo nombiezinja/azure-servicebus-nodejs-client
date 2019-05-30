@@ -10,6 +10,8 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 
+const io = require('socket.io')(server);
+
 const path = require('path');
 const azure = require('azure-sb');
 import {ServiceBusMessage,ServiceBusClient,ReceiveMode,QueueClient, delay} from "@azure/service-bus";
@@ -22,31 +24,38 @@ import send from "./actions/send"
 
 app.set('view engine', 'ejs');
 app.use(express.json())
-app.use(express.static(path.join(__dirname, '../static')));
-app.set('views', path.join(__dirname, '../static'));
+app.use(express.static(path.join(__dirname, '../../static')));
+app.set('views', path.join(__dirname, '../../static'));
 
 const connectionString = process.env.CONNECTION_STRING;
 const queueName = process.env.QUEUE_NAME;
 
 const sbService = azure.createServiceBusService(connectionString);
-// TODO Initiate azure sb client here and pass to middleware
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
 
 app.get('/', (req,res) => {
-  res.status(200).send("hello am sb explorer");
+
+  res.render('index');
 })
 
 // non-destructive stream
 app.get('/non-destructive-stream', (req,res) => {
+  nonDestructiveStream();
   res.status(200).send("hello am non destructive stream");
 })
 
 // destructive stream 
 app.get('/destructive-stream', (req,res) => {
+  destructiveStream();
   res.status(200).send("hello am destructive stream");
 })
 
 // peek dead letter queue 
 app.get('/dead-letter-queue', (req,res) => {
+  deadLetter();
   res.status(200).send("hello am dead letter queue");
 })
 
@@ -56,10 +65,12 @@ app.get('/send-msg', (req,res) => {
   res.status(200).send("hello am send msg");
 })
 
+// get queue info
 app.get('/queue-info',async (req, res) => {
   const queueInfo = await getQueueInfo(sbService, queueName);
   res.status(200).send(JSON.stringify(queueInfo));
 })
+
 
 server.listen(port, function listening() {
   console.log(`Server listening on ${server.address().port}`);

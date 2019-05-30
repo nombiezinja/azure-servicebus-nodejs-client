@@ -10,8 +10,7 @@ const {
 const connectionString = process.env.CONNECTION_STRING;
 const queueName = process.env.QUEUE_NAME;
 
-async function main() {
-  console.log("Main running")
+const main = async () => {
   const ns = ServiceBusClient.createFromConnectionString(connectionString);
 
   const client = ns.createQueueClient(queueName);
@@ -19,9 +18,9 @@ async function main() {
   const receiver = client.createReceiver(ReceiveMode.receiveAndDelete);
 
   const onMessageHandler = async (brokeredMessage) => {
-    console.log(new Date(Date.now()) + ` Received message: ${JSON.stringify(brokeredMessage.body)}`);
-    await brokeredMessage.complete();
+    console.log(new Date(Date.now()) + ` Destructive stream received message: ${JSON.stringify(brokeredMessage.body)}`);
   };
+  
   const onErrorHandler = (err) => {
     console.log("Error occurred: ", err);
   };
@@ -32,12 +31,11 @@ async function main() {
     });
 
     // Waiting long enough before closing the receiver to receive messages
-    // await delay(5000);
-
-    // await receiver.close();
-    // await client.close();
+    await delay(5000);
+    await receiver.close();
+    await client.close();
   } finally {
-    // await ns.close();
+    await ns.close();
   }
 }
 

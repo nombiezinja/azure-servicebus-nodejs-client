@@ -27,71 +27,49 @@ var _require = require("@azure/service-bus"),
 var connectionString = process.env.CONNECTION_STRING;
 var queueName = process.env.QUEUE_NAME;
 
-function main() {
-  return _main.apply(this, arguments);
-}
+var main = function main() {
+  var ns = ServiceBusClient.createFromConnectionString(connectionString);
+  var client = ns.createQueueClient(queueName);
+  var receiver = client.createReceiver(ReceiveMode.peekLock);
 
-function _main() {
-  _main = (0, _asyncToGenerator3["default"])(
+  var onMessageHandler =
   /*#__PURE__*/
-  _regenerator2["default"].mark(function _callee2() {
-    var ns, client, receiver, onMessageHandler, onErrorHandler;
-    return _regenerator2["default"].wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            console.log("Main running");
-            ns = ServiceBusClient.createFromConnectionString(connectionString);
-            client = ns.createQueueClient(queueName);
-            receiver = client.createReceiver(ReceiveMode.peekLock);
+  function () {
+    var _ref = (0, _asyncToGenerator3["default"])(
+    /*#__PURE__*/
+    _regenerator2["default"].mark(function _callee(brokeredMessage) {
+      return _regenerator2["default"].wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              console.log(new Date(Date.now()) + " Non destructive stream received message: ".concat(JSON.stringify(brokeredMessage.body))); // await brokeredMessage.complete();
 
-            onMessageHandler =
-            /*#__PURE__*/
-            function () {
-              var _ref = (0, _asyncToGenerator3["default"])(
-              /*#__PURE__*/
-              _regenerator2["default"].mark(function _callee(brokeredMessage) {
-                return _regenerator2["default"].wrap(function _callee$(_context) {
-                  while (1) {
-                    switch (_context.prev = _context.next) {
-                      case 0:
-                        console.log(new Date(Date.now()) + " Received message: ".concat(JSON.stringify(brokeredMessage.body))); // await brokeredMessage.complete();
-
-                      case 1:
-                      case "end":
-                        return _context.stop();
-                    }
-                  }
-                }, _callee);
-              }));
-
-              return function onMessageHandler(_x) {
-                return _ref.apply(this, arguments);
-              };
-            }();
-
-            onErrorHandler = function onErrorHandler(err) {
-              console.log("Error occurred: ", err);
-            };
-
-            try {
-              receiver.registerMessageHandler(onMessageHandler, onErrorHandler, {
-                autoComplete: false
-              }); // Waiting long enough before closing the receiver to receive messages
-              // await delay(5000);
-              // await receiver.close();
-              // await client.close();
-            } finally {// await ns.close();
-            }
-
-          case 7:
-          case "end":
-            return _context2.stop();
+            case 1:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, _callee2);
-  }));
-  return _main.apply(this, arguments);
-}
+      }, _callee);
+    }));
 
-exports["default"] = main();
+    return function onMessageHandler(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  var onErrorHandler = function onErrorHandler(err) {
+    console.log("Error occurred: ", err);
+  };
+
+  try {
+    receiver.registerMessageHandler(onMessageHandler, onErrorHandler, {
+      autoComplete: false
+    }); // Waiting long enough before closing the receiver to receive messages
+    // await delay(5000);
+    // await receiver.close();
+    // await client.close();
+  } finally {// await ns.close();
+  }
+};
+
+exports["default"] = main;
