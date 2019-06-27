@@ -43,7 +43,6 @@ app.get('/', (req,res) => {
 
 // non-destructive stream
 app.get('/non-destructive-stream', (req,res) => {
-
   nonDestructiveStream();
   res.status(200).send("hello am non destructive stream");
 })

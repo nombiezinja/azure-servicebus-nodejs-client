@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
+import QueueForm from './QueueForm.jsx';
 
 class App extends Component {
     
@@ -16,9 +17,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <p>
-        Main app
-        </p>
+        <QueueForm></QueueForm>
       </div>
     ); 
   }
