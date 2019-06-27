@@ -21,7 +21,6 @@ require('dotenv').config();
 var _require = require("@azure/service-bus"),
     ServiceBusClient = _require.ServiceBusClient;
 
-console.log("connection string", connectionString);
 var connectionString = process.env.CONNECTION_STRING;
 var queueName = process.env.QUEUE_NAME;
 var plants = [{
@@ -48,16 +47,17 @@ function _main() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            console.log("Send message");
             ns = ServiceBusClient.createFromConnectionString(connectionString); // If sending to a Topic, use `createTopicClient` instead of `createQueueClient`
 
             client = ns.createQueueClient(queueName);
             sender = client.createSender();
-            _context.prev = 3;
+            _context.prev = 4;
             index = 0;
 
-          case 5:
+          case 6:
             if (!(index < plants.length)) {
-              _context.next = 14;
+              _context.next = 15;
               break;
             }
 
@@ -67,32 +67,32 @@ function _main() {
               label: "plants"
             };
             console.log("Sending message: ".concat(message.body, " - ").concat(message.label));
-            _context.next = 11;
+            _context.next = 12;
             return sender.send(message);
 
-          case 11:
+          case 12:
             index++;
-            _context.next = 5;
+            _context.next = 6;
             break;
 
-          case 14:
-            _context.next = 16;
+          case 15:
+            _context.next = 17;
             return client.close();
 
-          case 16:
-            _context.prev = 16;
-            _context.next = 19;
+          case 17:
+            _context.prev = 17;
+            _context.next = 20;
             return ns.close();
 
-          case 19:
-            return _context.finish(16);
-
           case 20:
+            return _context.finish(17);
+
+          case 21:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[3,, 16, 20]]);
+    }, _callee, null, [[4,, 17, 21]]);
   }));
   return _main.apply(this, arguments);
 }

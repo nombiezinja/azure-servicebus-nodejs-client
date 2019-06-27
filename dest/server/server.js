@@ -61,10 +61,11 @@ app.set('views', path.join(__dirname, '../../static'));
 var connectionString = process.env.CONNECTION_STRING;
 var queueName = process.env.QUEUE_NAME;
 var sbService = azure.createServiceBusService(connectionString);
-io.on('connection', function (socket) {
-  console.log('a user connected');
-});
 app.get('/', function (req, res) {
+  console.log("hello");
+  io.on('connection', function (socket) {
+    console.log('a user connected', socket.id); // socket.broadcast.emit('')
+  });
   res.render('index');
 }); // non-destructive stream
 

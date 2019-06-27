@@ -32,17 +32,18 @@ const queueName = process.env.QUEUE_NAME;
 
 const sbService = azure.createServiceBusService(connectionString);
 
-io.on('connection', function(socket){
-  console.log('a user connected');
-});
-
 app.get('/', (req,res) => {
-
+  console.log("hello")
+  io.on('connection', function(socket){
+    console.log('a user connected', socket.id);
+    // socket.broadcast.emit('')
+  });
   res.render('index');
 })
 
 // non-destructive stream
 app.get('/non-destructive-stream', (req,res) => {
+
   nonDestructiveStream();
   res.status(200).send("hello am non destructive stream");
 })

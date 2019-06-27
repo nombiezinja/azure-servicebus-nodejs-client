@@ -3,10 +3,6 @@ require('dotenv').config();
 const {
   ServiceBusClient
 } = require("@azure/service-bus");
-
-console.log(
-  "connection string", connectionString
-)
 const connectionString = process.env.CONNECTION_STRING;
 const queueName = process.env.QUEUE_NAME;
 
@@ -25,6 +21,7 @@ const plants = [{
 ];
 
 async function main() {
+  console.log("Send message")
   const ns = ServiceBusClient.createFromConnectionString(connectionString);
 
   // If sending to a Topic, use `createTopicClient` instead of `createQueueClient`

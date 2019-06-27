@@ -18,6 +18,7 @@ const processDLQ = async () => {
   }
 }
 const processDeadletterMessageQueue = async () => {
+  console.log("Process dead letter message queue")
   const client = ns.createQueueClient(deadLetterQueueName);
   const receiver = client.createReceiver(ReceiveMode.peekLock);
 

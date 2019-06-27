@@ -74,12 +74,13 @@ function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
+            console.log("Process dead letter message queue");
             client = ns.createQueueClient(deadLetterQueueName);
             receiver = client.createReceiver(_serviceBus.ReceiveMode.peekLock);
-            _context2.next = 4;
+            _context2.next = 5;
             return receiver.receiveMessages(10);
 
-          case 4:
+          case 5:
             messages = _context2.sent;
 
             if (messages.length > 0) {
@@ -91,10 +92,10 @@ function () {
               console.log("Error: No messages were received from the DLQ.");
             }
 
-            _context2.next = 8;
+            _context2.next = 9;
             return client.close();
 
-          case 8:
+          case 9:
           case "end":
             return _context2.stop();
         }
